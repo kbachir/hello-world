@@ -5,3 +5,21 @@
 
 ### Install Jenkins
 https://pkg.jenkins.io/redhat-stable/
+
+- Install Git: `yum install git`
+
+- Add Github plugin to Jenkins
+
+- Configure Github plugin to use `git` path executable. If this doesn't work, run the `whereis git` command and use that path instead. 
+
+
+### Integrate Maven with Jenkins
+
+- Setup Maven on Jenkins Server
+
+- Setup env vars
+
+- Install maven plugin
+
+- Configure maven and java
+- 
