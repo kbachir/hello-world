@@ -1,9 +1,7 @@
-## DevOps Project for Beginners   
-
 [![Image](https://github.com/yankils/Simple-DevOps-Project/blob/master/Devops_course.PNG "DevOps Project - CI/CD with Jenkins Ansible Docker Kubernetes ")](https://www.udemy.com/course/valaxy-devops/?referralCode=8147A5CF4C8C7D9E253F)
 
 
-## Install Jenkins
+# Install Jenkins
 https://pkg.jenkins.io/redhat-stable/
 
 - Install Git: `yum install git`
@@ -28,7 +26,7 @@ ls
 
 ### Setup env vars
 
-`cd`
+`cd ~`
 
 `nano .bash_profile` to create an env var that only affects root user
 
@@ -57,7 +55,7 @@ We can now run `mvn -v` and execute the command outside of the /opt/maven/bin di
 
 # Tomcat Server
 
-### Installing Tomcat:
+## Installing Tomcat:
 
 Same process as maven: 
 
@@ -76,6 +74,17 @@ First, we need to update the context.xml file. To find this file, use `find / -n
          allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" /> -->
 ```
 
+To get login info for tomcat, navigate the users file in the conf dir and add the following:
+```
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager-jmx"/>
+<role rolename="manager-status"/>
+<user username="admin" password="admin" roles="manager-gui, manager-script, manager-jmx, manager-status"/>
+<user username="deployer" password="deployer" roles="manager-script"/>
+<user username="tomcat" password="s3cret" roles="manager-gui"/>
+```
+
 Navigate to /opt/tomcat/bin and run the shutdown.sh script to stop the tomcat service. Restart using startup.sh 
 
 - We can create a link for an executable so that we don't have to specify the entire path every time. I.e, where we have to navigate to `/opt/tomcat/bin/startup.sh` to start tomcat, we can create a an executable in the `/usr/local/bin` dir called tomcatup. This will allow us to execute the startup.sh script by only using the tomcatup command and not having to specify the entire path. This is because the `/usr/local/bin` dir is already specified in the $PATH environment variable, and we are creating a link between the `/opt/tomcat/bin/startup.sh` and `/usr/local/bin/tomcatup`, meaning 'tomcatup' is linked to the path of the startup.sh script. 
@@ -83,5 +92,15 @@ Navigate to /opt/tomcat/bin and run the shutdown.sh script to stop the tomcat se
 The following commands are creating links for the startup and shutdown scripts: 
 `
 ln -s /opt/tomcat/bin/shutdown.sh /usr/local/bin/tomcatdown
+
+
 ln -s /opt/tomcat/bin/startup.sh /usr/local/bin/tomcatup
 `
+
+## Integrating Tomcat with Jenkins
+
+- Install the Tomcat plugin called "Deploy to Container"
+
+### Configure tomcat server with credentials 
+- Navigate to Manage Jenkins > Credentials > Jenkins > Global Credentials > Add credentials:
+- We are going to use the manager script role from tomcat in a username and password credential. The user in this case is deployer. 
