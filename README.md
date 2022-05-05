@@ -112,3 +112,49 @@ ln -s /opt/tomcat/bin/startup.sh /usr/local/bin/tomcatup
 - post build action > deploy war/ear to container > "WAR/EAR files" = `webapp/target/target.var` (/var/lib/jenkins/workspace/FirstJob/webapp/target/webapp.var - "webapp.var" is the artifact we need, and up to "FirstJob" is standard path for jenkins jobs, so the path we need is `webapp/target/target.var`. Instead of specifying the absolute path, we can also specify  `**/*.war` which will tell Jenkins to find whatever relative path ends in .war extension.)
 - Context path is empty
 - Containers =  Tomcat 8.x > credentials = deployer > Tomcat url > http://IP:8080
+
+### Poll SCM
+- Poll SCM is is cron job that checks the repo to see if any changes are made periodically. If changes are made, it will build the job. If no changes are detected on the repo, the job won't build.
+- Similar to the "Build periodically" post build action, but that one builds irrespective of any changes. 
+- Cron jobs are time based. 
+
+# Docker Server
+- Set up a docker server
+
+## Tomcat container
+- Fixing tomcat in container error: in webapps.dist `cp -R * ../webapps`
+
+## Dockerfile
+
+- FROM: To pull base image
+- RUN: To execute shell commands
+- CMD: To provide defaults for a container at the time of execution - these can be overwritten
+- ENTRYPOINT: To configure a container that will run as an executable - these cannot be overwritten
+- MKDIR: Create directory
+- WORKDIR: Set working directory
+- COPY: copy a directory from local machine to container
+- ADD: To copy files or folders from local machine to containers. Can also use wget command with this to download stuff from browser
+- EXPOSE: Which port to expose and listen to on the specified network on runtime
+- ENV: Set environment variables
+
+```
+FROM centos:7
+
+RUN yum install java -y
+
+WORKDIR -p /opt/tomcat
+
+WORKDIR /opt/tomcat
+
+ADD https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.62/bin/apache-tomcat-9.0.62.tar.gz .
+
+RUN tar -xvzf apache-tomcat-9.0.62.tar.gz
+
+RUN mv apache-tomcat-9.0.62/* /opt/tomcat
+
+EXPOSE 8080
+
+WORKDIR /opt/tomcat/bin
+
+CMD ["./catalina.sh", "run"]
+```
