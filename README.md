@@ -104,3 +104,11 @@ ln -s /opt/tomcat/bin/startup.sh /usr/local/bin/tomcatup
 ### Configure tomcat server with credentials 
 - Navigate to Manage Jenkins > Credentials > Jenkins > Global Credentials > Add credentials:
 - We are going to use the manager script role from tomcat in a username and password credential. The user in this case is deployer. 
+
+### Creating tomcat job
+
+- Git source code
+- Clean install
+- post build action > deploy war/ear to container > "WAR/EAR files" = `webapp/target/target.var` (/var/lib/jenkins/workspace/FirstJob/webapp/target/webapp.var - "webapp.var" is the artifact we need, and up to "FirstJob" is standard path for jenkins jobs, so the path we need is `webapp/target/target.var`. Instead of specifying the absolute path, we can also specify  `**/*.war` which will tell Jenkins to find whatever relative path ends in .war extension.)
+- Context path is empty
+- Containers =  Tomcat 8.x > credentials = deployer > Tomcat url > http://IP:8080
